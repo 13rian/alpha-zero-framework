@@ -9,4 +9,6 @@ This project started out by implementing DeepMind's AlphaZero algorithm for Conn
 In order to implent a new games thw following steps are necessary:
 - create a new class that implements all methods defined in game.py.
 - change the constants BOARD_WIDTH, BOARD_HEIGHT, ACTION_COUNT in globals.CONST. They define the width, the height and the total number of possible actions
-- In the file MainSelfPlayTraining.py pass the class of the game as parameter to the az_main.py function
+- adapt all hyperparameters and configuration value in globals.py
+- in the file MainSelfPlayTraining.py pass the class of the game as parameter to the az_main.py function
+- run MainSelfPlayTraining.py
