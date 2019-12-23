@@ -5,7 +5,7 @@ import shutil
 
 import torch
 
-from globals import Config
+from globals import config
 
 logger = logging.getLogger('data_storage')
 storage_path = "training_data.pkl"
@@ -50,7 +50,7 @@ class TrainingData:
         """
 
         net_path = "{}/network_gen_{}.pt".format(network_dir, self.cycle)
-        net = load_net(net_path, Config.evaluation_device)
+        net = load_net(net_path, config.evaluation_device)
         net.eval()
         logger.debug("network loaded from path {}".format(net_path))
         return net

@@ -4,7 +4,8 @@ import torch
 import numpy as np
 
 from utils import utils
-from globals import CONST, Config
+from globals import CONST
+from games.connect4.configuration import Config
 import game
 
 # mask that defines the location of the upper bits of the board

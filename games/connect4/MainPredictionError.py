@@ -9,7 +9,7 @@ import pandas as pd
 
 from utils import utils
 from games.connect4 import connect4
-from globals import Config
+from games.connect4.configuration import Config
 import data_storage
 import mcts
 import evaluation

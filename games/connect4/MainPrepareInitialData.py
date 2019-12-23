@@ -8,7 +8,7 @@ import torch
 from utils import utils
 import alpha_zero_learning
 import networks
-from globals import Config
+from games.connect4.configuration import Config
 
 
 def main():
@@ -31,7 +31,7 @@ def main():
 
     # create the agent
     logger.info("create a new random network for the self play")
-    network = networks.ResNet(Config.learning_rate, Config.n_blocks, Config.n_filters, Config.weight_decay)
+    network = networks.ResNet()
     torch.save({'state_dict': network.state_dict()}, network_path)
 
 

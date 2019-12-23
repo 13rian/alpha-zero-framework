@@ -3,7 +3,7 @@ import math
 import torch
 import numpy as np
 
-from globals import CONST, Config
+from globals import CONST, config
 
 
 class MCTS:
@@ -29,12 +29,12 @@ class MCTS:
         :param temp:    the temperature
         :return:        vector containing the policy value for the moves
         """
-        counts = [self.N_sa[(s, a)] if (s, a) in self.N_sa else 0 for a in range(Config.action_count)]
+        counts = [self.N_sa[(s, a)] if (s, a) in self.N_sa else 0 for a in range(config.tot_actions)]
 
         # in order to learn something set the probabilities of the best action to 1 and all other action to 0
         if temp == 0:
             action = np.argmax(counts)
-            probs = [0] * CONST.ACTION_COUNT
+            probs = [0] * config.tot_actions
             probs[action] = 1
             return np.array(probs)
 
@@ -92,9 +92,9 @@ class MCTS:
             action = -1
             for a in legal_moves:
                 if (s, a) in self.Q:
-                    u = self.Q[(s, a)] + Config.c_puct * p_s[a] * math.sqrt(self.N_s[s]) / (1 + self.N_sa[(s, a)])
+                    u = self.Q[(s, a)] + config.c_puct * p_s[a] * math.sqrt(self.N_s[s]) / (1 + self.N_sa[(s, a)])
                 else:
-                    u = Config.c_puct * p_s[a] * math.sqrt(self.N_s[s] + 1e-8)  # avoid division by 0
+                    u = config.c_puct * p_s[a] * math.sqrt(self.N_s[s] + 1e-8)  # avoid division by 0
 
                 if u > max_ucb:
                     max_ucb = u
@@ -203,7 +203,7 @@ def run_simulations(mcts_list, mcts_sim_count, net, alpha_dirich):
 
         # pass all samples through the network
         if len(batch_list) > 0:
-            batch_bundle = torch.Tensor(batch_list).to(Config.evaluation_device)
+            batch_bundle = torch.Tensor(batch_list).to(config.evaluation_device)
             policy, value = net(batch_bundle)
             policy = policy.detach().cpu().numpy()
 

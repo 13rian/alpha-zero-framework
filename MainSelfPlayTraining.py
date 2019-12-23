@@ -5,10 +5,10 @@ import logging
 import matplotlib.pyplot as plt
 import numpy as np
 
-from globals import Config
 from utils import utils
 import alpha_zero_learning
 import data_storage
+from globals import config
 import networks
 from games.tic_tac_toe import tic_tac_toe
 
@@ -29,19 +29,18 @@ def main_az(game_class):
     random.seed(a=None, version=2)
     np.random.seed(seed=None)
 
-
     # create the storage object
     training_data = data_storage.load_data()
 
     # create the agent
-    network = networks.ResNet(Config.learning_rate, Config.n_blocks, Config.n_filters, Config.weight_decay)
+    network = networks.ResNet()
     agent = alpha_zero_learning.Agent(network)
 
     if training_data.cycle == 0:
         logger.debug("create a new agent")
         training_data.save_data(agent.network)              # save the generation 0 network
 
-        if Config.use_initial_data:
+        if config.use_initial_data:
             logger.debug("fill the experience buffer with some initial data")
             agent.experience_buffer.fill_with_initial_data()    # add training examples of untrained network
 
@@ -52,7 +51,7 @@ def main_az(game_class):
         agent.experience_buffer = training_data.experience_buffer
 
     start_training = time.time()
-    for i in range(training_data.cycle, Config.cycle_count, 1):
+    for i in range(training_data.cycle, config.cycles, 1):
         ###### self play and update: create some games data through self play
         logger.info("start playing games in cycle {}".format(i))
         avg_moves_played = agent.play_self_play_games(game_class, training_data.network_path)

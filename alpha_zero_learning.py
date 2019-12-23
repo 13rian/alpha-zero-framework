@@ -6,7 +6,7 @@ import torch
 from torch.utils import data
 import numpy as np
 
-from globals import CONST, Config
+from globals import CONST, config
 import mcts
 from mcts import MCTS
 import data_storage
@@ -18,14 +18,13 @@ logger = logging.getLogger('az_learning')
 class Agent:
     def __init__(self, network):
         """
-        :param network:       alpha zero network that is used for training and evaluation
+        :param network:         alpha zero network that is used for training and evaluation
         """
-
         self.network = network                                  # the network
         self.experience_buffer = ExperienceBuffer()             # buffer that saves all experiences
 
         # activate the evaluation mode of the networks
-        self.network = data_storage.net_to_device(self.network, Config.evaluation_device)
+        self.network = data_storage.net_to_device(self.network, config.evaluation_device)
         self.network.eval()
 
 
@@ -37,7 +36,7 @@ class Agent:
         :return:                the average nu,ber of moves played in a games
         """
         # execute the self-play
-        self_play_results = __self_play_worker__(game_class, network_path, Config.episode_count)
+        self_play_results = __self_play_worker__(game_class, network_path, config.episodes)
 
 
         # add the training examples to the experience buffer
@@ -45,7 +44,7 @@ class Agent:
         tot_moves_played = len(self_play_results) / game_class.symmetry_count()  # account for symmetric boards,
         self.experience_buffer.add_data(self_play_results)
 
-        avg_game_length = tot_moves_played / Config.episode_count
+        avg_game_length = tot_moves_played / config.episodes
         return avg_game_length
 
 
@@ -57,29 +56,29 @@ class Agent:
         """
         # setup the data set
         training_generator = self.experience_buffer.prepare_data(generation)
-        step_size = training_generator.dataset.__len__() // (2 * Config.batch_size)
+        step_size = training_generator.dataset.__len__() // (2 * config.batch_size)
         logger.info("training data prepared, step size: {}".format(step_size))
 
 
         # activate the training mode
-        self.network = data_storage.net_to_device(self.network, Config.training_device)
-        if Config.cyclic_learning:
+        self.network = data_storage.net_to_device(self.network, config.training_device)
+        if config.cyclic_learning:
             self.network.update_scheduler(step_size)  # update the scheduler
         self.network.train()
 
         avg_loss_p = 0
         avg_loss_v = 0
         tot_batch_count = 0
-        for epoch in range(Config.epoch_count):
+        for epoch in range(config.epochs):
             # training
             for state_batch, value_batch, policy_batch in training_generator:
                 # send the data to the gpu
-                state_batch = state_batch.to(Config.training_device, dtype=torch.float)
-                value_batch = value_batch.unsqueeze(1).to(Config.training_device, dtype=torch.float)
-                policy_batch = policy_batch.to(Config.training_device, dtype=torch.float)
+                state_batch = state_batch.to(config.training_device, dtype=torch.float)
+                value_batch = value_batch.unsqueeze(1).to(config.training_device, dtype=torch.float)
+                policy_batch = policy_batch.to(config.training_device, dtype=torch.float)
 
                 # execute the training step with one batch
-                if Config.cyclic_learning:
+                if config.cyclic_learning:
                     loss_p, loss_v = self.network.train_cyclical_step(state_batch, policy_batch, value_batch)
                 else:
                     loss_p, loss_v = self.network.train_step(state_batch, policy_batch, value_batch)
@@ -93,7 +92,7 @@ class Agent:
         avg_loss_v /= tot_batch_count
 
         # activate the evaluation mode
-        self.network = data_storage.net_to_device(self.network, Config.evaluation_device)
+        self.network = data_storage.net_to_device(self.network, config.evaluation_device)
         self.network.eval()
 
         return avg_loss_p.item(), avg_loss_v.item()
@@ -144,11 +143,11 @@ class ExperienceBuffer:
         with open("initial_training_data.pkl", 'rb') as input:
             initial_data = pickle.load(input)
 
-        for i in range(Config.min_window_size):
+        for i in range(config.min_window_size):
             self.add_new_cycle()
 
-            start_idx = i*Config.episode_count*Config.initial_game_length
-            end_idx = (i+1)*Config.episode_count*Config.initial_game_length
+            start_idx = i*config.episode_count*config.initial_game_length
+            end_idx = (i+1)*config.episode_count*config.initial_game_length
             data = initial_data[start_idx:end_idx]
             self.add_data(data)
 
@@ -179,21 +178,19 @@ class ExperienceBuffer:
         :return:            the size of the training window
         """
         # some initilal data is used
-        if Config.use_initial_data:
-            window_size = Config.min_window_size + generation // 2
-            if window_size > Config.max_window_size:
-                window_size = Config.max_window_size
+        if config.use_initial_data:
+            window_size = config.min_window_size + generation // 2
+            if window_size > config.max_window_size:
+                window_size = config.max_window_size
 
             return window_size
 
         # no initial data is used
-        window_size = max(Config.min_window_size + (generation - Config.min_window_size + 1) // 2, Config.min_window_size)
-        if window_size > Config.max_window_size:
-            window_size = Config.max_window_size
+        window_size = max(config.min_window_size + (generation - config.min_window_size + 1) // 2, config.min_window_size)
+        if window_size > config.max_window_size:
+            window_size = config.max_window_size
 
         return window_size
-
-
 
 
     def prepare_data(self, generation):
@@ -216,14 +213,14 @@ class ExperienceBuffer:
             training_data += sample
 
         # average the positions (early positions are overrepresented)
-        if Config.average_positions:
+        if config.average_positions:
             training_data = self.__average_positions__(training_data)
 
 
 
         # create the training set
         training_set = SelfPlayDataSet(training_data)
-        training_generator = data.DataLoader(training_set, **Config.data_set_params)
+        training_generator = data.DataLoader(training_set, **config.data_set_params)
         return training_generator
 
 
@@ -291,7 +288,7 @@ def __self_play_worker__(game_class, network_path, game_count):
     :return:                    a list of dictionaries with all training examples
     """
     # load the network
-    net = data_storage.load_net(network_path, Config.evaluation_device)
+    net = data_storage.load_net(network_path, config.evaluation_device)
 
     training_expl_list = []
 
@@ -315,11 +312,11 @@ def __self_play_worker__(game_class, network_path, game_count):
                 continue
 
         # =========================================== execute the mcts simulations for all boards
-        mcts.run_simulations(mcts_list, Config.mcts_sim_count, net, Config.alpha_dirich)
+        mcts.run_simulations(mcts_list, config.mcts_sim_count, net, config.alpha_dirich)
 
 
         # ===========================================  get the policy from the mcts
-        temp = 0 if move_count >= Config.temp_threshold else Config.temp
+        temp = 0 if move_count >= config.temp_threshold else config.temp
 
         for i_mcts_ctx, mcts_ctx in enumerate(mcts_list):
             # skip terminated games
