@@ -12,3 +12,6 @@ In order to implent a new games thw following steps are necessary:
 - adapt all hyperparameters and configuration value in globals.py
 - in the file MainSelfPlayTraining.py pass the class of the game as parameter to the az_main.py function
 - run MainSelfPlayTraining.py
+
+
+The training process can be interrupted at any time and resumed later on as all networks and training examples will be saved after training. If you want to change the game or start from scratch make sure to empty the networks folder and delete the training_data.pkl.

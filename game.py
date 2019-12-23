@@ -24,13 +24,25 @@ class GameBoard:
         pass
 
 
-    def symmetric_boards(self):
+    def current_player(self):
         """
-        returns a list of symmetric boards or None if there are no symmetries or if symmetric positions
-        should not be used for the training. the list should not include the original board
+        returns the current player, needs to be CONST.WHITE or CONST.BLACK
         :return:
         """
         pass
+
+
+    def symmetries(self, policy):
+        """
+        :param policy:      the policy of the original board
+        returns a list of symmetric boards and policies or None if there are no symmetries or if symmetric positions
+        should not be used for the training. the list should not include the original board. the boards and the
+        policies need to have the same order in order to be able to map them to each other
+        :return:    list of boards
+                    list of policy
+        """
+        return None, None
+
 
     @staticmethod
     def symmetry_count():
@@ -39,7 +51,7 @@ class GameBoard:
         than the size of the list returned by symmetric_boards(). if there is no symmetry this count should be 1
         :return:
         """
-        pass
+        return 1
 
     
     def white_perspective(self):

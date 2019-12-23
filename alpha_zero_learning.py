@@ -1,4 +1,3 @@
-import random
 import logging
 import pickle
 from operator import itemgetter
@@ -7,7 +6,6 @@ import torch
 from torch.utils import data
 import numpy as np
 
-from games import connect4
 from globals import CONST, Config
 import mcts
 from mcts import MCTS
@@ -316,24 +314,6 @@ def __self_play_worker__(game_class, network_path, game_count):
             if mcts_ctx.board.is_terminal():
                 continue
 
-            # add regular board
-            state, player = mcts_ctx.board.white_perspective()
-            state_id = mcts_ctx.board.state_id()
-            state_list[i_mcts_ctx].append(state)
-            state_id_list[i_mcts_ctx].append(state_id)
-            player_list[i_mcts_ctx].append(player)
-
-            # add symmetric boards
-            symmetric_boards = mcts_ctx.board.symmetric_boards()
-            if symmetric_boards is not None:
-                for symmetric_board in symmetric_boards:
-                    state_s, player_s = symmetric_board.white_perspective()
-                    state_id_s = symmetric_board.state_id()
-                    state_list[i_mcts_ctx].append(state_s)
-                    state_id_list[i_mcts_ctx].append(state_id_s)
-                    player_list[i_mcts_ctx].append(player_s)
-
-
         # =========================================== execute the mcts simulations for all boards
         mcts.run_simulations(mcts_list, Config.mcts_sim_count, net, Config.alpha_dirich)
 
@@ -347,11 +327,28 @@ def __self_play_worker__(game_class, network_path, game_count):
                 continue
 
             policy = mcts_list[i_mcts_ctx].policy_from_state(mcts_ctx.board.state_id(), temp)
+
+            # add regular board
+            state, player = mcts_ctx.board.white_perspective()
+            state_id = mcts_ctx.board.state_id()
+            state_list[i_mcts_ctx].append(state)
+            state_id_list[i_mcts_ctx].append(state_id)
+            player_list[i_mcts_ctx].append(player)
             policy_list[i_mcts_ctx].append(policy)
 
-            # add the mirrored policy as well
-            policy_m = np.flip(policy)
-            policy_list[i_mcts_ctx].append(policy_m)
+
+            # add symmetric boards
+            board_symmetries, policy_symmetries = mcts_ctx.board.symmetries(policy)
+            if board_symmetries is not None:
+                for board_sym, policy_sym in zip(board_symmetries, policy_symmetries):
+                    state_s, player_s = board_sym.white_perspective()
+                    state_id_s = board_sym.state_id()
+                    state_list[i_mcts_ctx].append(state_s)
+                    state_id_list[i_mcts_ctx].append(state_id_s)
+                    player_list[i_mcts_ctx].append(player_s)
+
+                    policy_list[i_mcts_ctx].append(policy_sym)
+
 
             # sample from the policy to determine the move to play
             move = np.random.choice(len(policy), p=policy)

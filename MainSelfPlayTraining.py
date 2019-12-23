@@ -10,8 +10,7 @@ from utils import utils
 import alpha_zero_learning
 import data_storage
 import networks
-from games import connect4
-from games import tic_tac_toe
+from games.tic_tac_toe import tic_tac_toe
 
 
 #@utils.profile

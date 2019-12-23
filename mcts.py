@@ -64,7 +64,7 @@ class MCTS:
         while True:
             s = board.state_id()
             self.states.append(s)
-            player = board.player
+            player = board.current_player()
             self.players.append(player)
 
             # check if we are on a leaf node (state form which no simulation was played so far)
@@ -154,6 +154,24 @@ class MCTS:
                 self.N_sa[(s, a)] = 1
 
 
+    def next_mcts_policy(self, board, mcts_sim_count, net, temp, alpha_dirich):
+        """
+        uses the search tree that was already built to find the mcts policy
+        :param board:               the board of which the policy should be calculated
+        :param mcts_sim_count:      the number of mcts simulations
+        :param net:                 the network
+        :param temp:                the temperature
+        :param alpha_dirich:        the dirichlet parameter alpha
+        :return:
+        """
+        self.board = board
+        mcts_list = [self]
+        run_simulations(mcts_list, mcts_sim_count, net, alpha_dirich)
+        policy = mcts_list[0].policy_from_state(mcts_list[0].board.state_id(), temp)
+        return policy
+
+
+
 
 def run_simulations(mcts_list, mcts_sim_count, net, alpha_dirich):
     """
@@ -195,7 +213,7 @@ def run_simulations(mcts_list, mcts_sim_count, net, alpha_dirich):
             leaf_board = leaf_board_list[i_mcts_ctx]
             if leaf_board is not None:
                 # get the value from the white perspective
-                value_white = value[i_sample].item() if leaf_board.player == CONST.WHITE else -value[i_sample].item()
+                value_white = value[i_sample].item() if leaf_board.current_player() == CONST.WHITE else -value[i_sample].item()
 
                 # finish the simulation with the simulation with the network evaluation
                 mcts_list[i_mcts_ctx].finish_simulation(leaf_board, value_white, policy[i_sample])
@@ -204,7 +222,7 @@ def run_simulations(mcts_list, mcts_sim_count, net, alpha_dirich):
 
 def mcts_policy(board, mcts_sim_count, net, temp, alpha_dirich):
     """
-    calculates the mcts policy for one board state
+    calculates the mcts policy with a fresh tree search for one board state
     :param board:               the board of which the policy should be calculated
     :param mcts_sim_count:      the number of mcts simulations
     :param net:                 the network
