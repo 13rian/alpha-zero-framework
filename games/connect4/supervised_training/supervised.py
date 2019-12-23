@@ -1,8 +1,8 @@
 import torch
 from torch.utils import data
 
-from globals import CONST
-from game import connect4
+from globals import Config
+from games.connect4 import connect4
 
 
 class Dataset(data.Dataset):
@@ -70,7 +70,7 @@ def create_training_set(data_set):
             values.append(value)
 
             # policy
-            policy = CONST.BOARD_WIDTH * [0]
+            policy = Config.action_count * [0]
             move_str = data_set["weak_moves"][i]
             moves = move_str.split('-')
             probability = 1 / len(moves)

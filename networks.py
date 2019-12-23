@@ -16,7 +16,7 @@ class ConvBlock(nn.Module):
 
     def __init__(self, n_filters):
         super(ConvBlock, self).__init__()
-        self.conv1 = nn.Conv2d(2, n_filters, kernel_size=3, padding=1, stride=1)
+        self.conv1 = nn.Conv2d(Config.n_input_channels, n_filters, kernel_size=3, padding=1, stride=1)
         self.bn1 = nn.BatchNorm2d(n_filters)
 
     def forward(self, x):
@@ -58,29 +58,32 @@ class OutBlock(nn.Module):
 
     def __init__(self, n_filters):
         super(OutBlock, self).__init__()
-        self.conv1_v = nn.Conv2d(n_filters, 32, kernel_size=1)  # value head
-        self.bn1_v = nn.BatchNorm2d(32)
-        self.fc1_v = nn.Linear(32 * CONST.BOARD_SIZE, 256)
+
+        # value head
+        self.conv1_v = nn.Conv2d(n_filters, Config.n_value_head_filters, kernel_size=1)
+        self.bn1_v = nn.BatchNorm2d(Config.n_value_head_filters)
+        self.fc1_v = nn.Linear(Config.n_value_head_filters * Config.board_size, 256)
         self.fc2_v = nn.Linear(256, 1)
 
-        self.conv1_p = nn.Conv2d(n_filters, 32, kernel_size=1)  # policy head
-        self.bn1_p = nn.BatchNorm2d(32)
-        self.fc1_p = nn.Linear(32 * CONST.BOARD_SIZE, 256)
-        self.fc2_p = nn.Linear(256, CONST.ACTION_COUNT)
+        # policy head
+        self.conv1_p = nn.Conv2d(n_filters, Config.n_policy_head_filters, kernel_size=1)
+        self.bn1_p = nn.BatchNorm2d(Config.n_policy_head_filters)
+        self.fc1_p = nn.Linear(Config.n_policy_head_filters * Config.board_size, 256)
+        self.fc2_p = nn.Linear(256, Config.action_count)
         self.logsoftmax = nn.LogSoftmax(dim=1)
 
 
     def forward(self, x):
         # value head
         v = F.relu(self.bn1_v(self.conv1_v(x)))
-        v = v.view(-1, 32 * CONST.BOARD_SIZE)  # channels*board size
+        v = v.view(-1, Config.n_value_head_filters * Config.board_size)  # channels*board size
         v = F.relu(self.fc1_v(v))
         v = self.fc2_v(v)
         v = torch.tanh(v)
 
         # policy head
         p = F.relu(self.bn1_p(self.conv1_p(x)))
-        p = p.view(-1, 32*CONST.BOARD_SIZE)
+        p = p.view(-1, Config.n_policy_head_filters*Config.board_size)
         p = F.relu(self.fc1_p(p))
         p = self.fc2_p(p)
         p = self.logsoftmax(p).exp()

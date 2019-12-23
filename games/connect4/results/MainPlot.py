@@ -50,7 +50,7 @@ plt.ylabel("Cross-Entropy Loss")
 fig3.show()
 
 
-# plot the value loss
+# plot the average moves played
 value_loss = np.load("value_loss.npy")
 
 fig4 = plt.figure(4)

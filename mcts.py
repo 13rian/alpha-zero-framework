@@ -29,7 +29,7 @@ class MCTS:
         :param temp:    the temperature
         :return:        vector containing the policy value for the moves
         """
-        counts = [self.N_sa[(s, a)] if (s, a) in self.N_sa else 0 for a in range(CONST.ACTION_COUNT)]
+        counts = [self.N_sa[(s, a)] if (s, a) in self.N_sa else 0 for a in range(Config.action_count)]
 
         # in order to learn something set the probabilities of the best action to 1 and all other action to 0
         if temp == 0:

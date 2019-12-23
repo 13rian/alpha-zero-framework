@@ -4,7 +4,7 @@ import torch
 import numpy as np
 
 from utils import utils
-from globals import CONST
+from globals import CONST, Config
 import game
 
 # mask that defines the location of the upper bits of the board
@@ -109,8 +109,8 @@ class Connect4Board(game.GameBoard):
 
     def legal_moves(self):
         legal_moves = []
-        for i in range(CONST.BOARD_WIDTH):
-            top_mask = (1 << (CONST.BOARD_HEIGHT - 1)) << i * (CONST.BOARD_HEIGHT + 1)
+        for i in range(Config.board_width):
+            top_mask = (1 << (Config.board_height - 1)) << i * (Config.board_height + 1)
             if (self.disk_mask & top_mask) == 0:
                 legal_moves.append(i)
 
@@ -169,16 +169,16 @@ class Connect4Board(game.GameBoard):
         mirrored_number = 0
 
         # left half of the board
-        for col in range((CONST.BOARD_WIDTH+1) // 2 - 1):
-            mirrored_number += (number & column_mask(col)) << ((CONST.BOARD_WIDTH - (2 * col + 1)) * (CONST.BOARD_HEIGHT + 1))
+        for col in range((Config.board_width+1) // 2 - 1):
+            mirrored_number += (number & column_mask(col)) << ((Config.board_width - (2 * col + 1)) * (Config.board_height + 1))
 
         # right half of the board
-        for col in range((CONST.BOARD_WIDTH+1) // 2 - 1):
-            mirrored_number += (number & column_mask(CONST.BOARD_WIDTH - col - 1)) >> ((CONST.BOARD_WIDTH - (2 * col + 1)) * (CONST.BOARD_HEIGHT + 1))
+        for col in range((Config.board_width+1) // 2 - 1):
+            mirrored_number += (number & column_mask(Config.board_width - col - 1)) >> ((Config.board_width - (2 * col + 1)) * (Config.board_height + 1))
 
         # center row
-        if CONST.BOARD_WIDTH % 2 != 0:
-            col = CONST.BOARD_WIDTH // 2
+        if Config.board_width % 2 != 0:
+            col = Config.board_width // 2
             mirrored_number += (number & column_mask(col))
 
         return mirrored_number
@@ -362,4 +362,4 @@ def column_mask(col):
     :param col:     board column
     :return:
     """
-    return ((1 << CONST.BOARD_HEIGHT) - 1) << col * (CONST.BOARD_HEIGHT + 1)
+    return ((1 << Config.board_height) - 1) << col * (Config.board_height + 1)
