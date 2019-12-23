@@ -7,8 +7,8 @@ class Config:
 	training_device = torch.device('cuda') 			# the pytorch device that is used for training
 
 	# board dimension
-	board_width = 3 	    				 # the width of the board (number of columns)
-	board_height = 3						 # the height of the board
+	board_width = 7 	    				 # the width of the board (number of columns)
+	board_height = 6						 # the height of the board
 	board_size = board_width * board_height  # the size of the board
 	tot_actions = 7  						 # the number of all possible actions (moves)
 
@@ -19,7 +19,7 @@ class Config:
 	use_initial_data = False  	# true if the generation 0 network data should be used to have a larger experience buffer at start
 
 	# hyperparameters
-	mcts_sim_count = 800   		# the number of simulations for the monte-carlo tree search 800
+	mcts_sim_count = 200   		# the number of simulations for the monte-carlo tree search 800
 	c_puct = 4 	 				# the higher this constant the more the mcts explores 4
 	temp = 1  					# the temperature, controls the policy value distribution
 	temp_threshold = 42  		# up to this move the temp will be temp, otherwise 0 (deterministic play)

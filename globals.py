@@ -1,4 +1,5 @@
-from games.tic_tac_toe import configuration
+# from games.tic_tac_toe import configuration
+from games.connect4 import configuration
 
 
 class CONST:

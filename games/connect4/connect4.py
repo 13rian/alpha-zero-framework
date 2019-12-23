@@ -57,7 +57,7 @@ class Connect4Board(game.GameBoard):
 
     @staticmethod
     def symmetry_count():
-        return 1
+        return 2
 
 
     def white_perspective(self):

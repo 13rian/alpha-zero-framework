@@ -11,6 +11,7 @@ import data_storage
 from globals import config
 import networks
 from games.tic_tac_toe import tic_tac_toe
+from games.connect4 import connect4
 
 
 #@utils.profile
@@ -124,6 +125,7 @@ def main_az(game_class):
 
 
 if __name__ == '__main__':
-    main_az(tic_tac_toe.TicTacToeBoard)
+    # main_az(tic_tac_toe.TicTacToeBoard)
+    main_az(connect4.Connect4Board)
 
 
