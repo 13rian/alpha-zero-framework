@@ -89,7 +89,7 @@ class Connect4Board(game.GameBoard):
         return state
 
 
-    def play_move(self, column):
+    def execute_action(self, column):
         """
         plays the passed move on the board
         :param column:    integer that defines the column in which the disk is played
@@ -108,7 +108,7 @@ class Connect4Board(game.GameBoard):
             self.terminal = True
 
 
-    def legal_moves(self):
+    def legal_actions(self):
         legal_moves = []
         for i in range(Config.board_width):
             top_mask = (1 << (Config.board_height - 1)) << i * (Config.board_height + 1)
@@ -118,7 +118,7 @@ class Connect4Board(game.GameBoard):
         return legal_moves
 
 
-    def illegal_moves(self):
+    def illegal_actions(self):
         illegal_moves = []
         for idx, val in enumerate([5, 12, 19, 26, 33, 40, 47]):
             if self.disk_mask & (1 << val):
@@ -148,7 +148,7 @@ class Connect4Board(game.GameBoard):
 
 
     ###########################################################################################################
-    #                                               helper methds                                             #
+    #                                               helper methods                                            #
     ###########################################################################################################
     def mirror(self):
         """
@@ -295,7 +295,7 @@ class Connect4Board(game.GameBoard):
 
 
     def is_legal_move(self, move):
-        if move in self.legal_moves():
+        if move in self.legal_actions():
             return True
         else:
             return False

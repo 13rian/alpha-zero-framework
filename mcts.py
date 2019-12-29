@@ -21,29 +21,6 @@ class MCTS:
         self.actions = []
 
 
-    def policy_from_state(self, s, temp):
-        """
-        returns the policy of the passed state id. it only makes sense to call this methods if a few
-        monte carlo simulations were executed previously.
-        :param s:       state id of the board
-        :param temp:    the temperature
-        :return:        vector containing the policy value for the moves
-        """
-        counts = [self.N_sa[(s, a)] if (s, a) in self.N_sa else 0 for a in range(config.tot_actions)]
-
-        # in order to learn something set the probabilities of the best action to 1 and all other action to 0
-        if temp == 0:
-            action = np.argmax(counts)
-            probs = [0] * config.tot_actions
-            probs[action] = 1
-            return np.array(probs)
-
-        else:
-            counts = [c ** (1. / temp) for c in counts]
-            probs = [c / float(sum(counts)) for c in counts]
-            return np.array(probs)
-
-
     def exec_simulation(self, board, alpha_dirich=0):
         """
         executes one Monte-Carlo Tree search simulation. the simulation always starts a the rootk node and ends
@@ -73,7 +50,7 @@ class MCTS:
                 return board
 
             # add dirichlet noise to the root node
-            legal_moves = board.legal_moves()
+            legal_moves = board.legal_actions()
             p_s = self.P[s]
             if alpha_dirich > 0:
                 p_s = np.copy(p_s)
@@ -103,7 +80,7 @@ class MCTS:
             self.N_s[s] += 1
             self.actions.append(action)
             board = board.clone()
-            board.play_move(action)
+            board.execute_action(action)
 
             # check if the games is terminal
             if board.is_terminal():
@@ -125,7 +102,7 @@ class MCTS:
             self.P[s] = policy
 
             # ensure that the summed probability of all valid moves is 1
-            self.P[s][board.illegal_moves()] = 0
+            self.P[s][board.illegal_actions()] = 0
             total_prob = np.sum(self.P[s])
             if total_prob > 0:
                 self.P[s] /= total_prob  # normalize the probabilities
@@ -133,7 +110,7 @@ class MCTS:
             else:
                 # the network did not choose any legal move, make all moves equally probable
                 print("warning: network probabilities for all legal moves are 0, choose a equal distribution")
-                legal_moves = board.legal_moves()
+                legal_moves = board.legal_actions()
                 self.P[s][legal_moves] = 1 / len(legal_moves)
 
             self.N_s[s] = 0
@@ -152,6 +129,29 @@ class MCTS:
             else:
                 self.Q[(s, a)] = v_true
                 self.N_sa[(s, a)] = 1
+
+
+    def policy_from_state(self, s, temp):
+        """
+        returns the policy of the passed state id. it only makes sense to call this methods if a few
+        monte carlo simulations were executed previously.
+        :param s:       state id of the board
+        :param temp:    the temperature
+        :return:        vector containing the policy value for the moves
+        """
+        counts = [self.N_sa[(s, a)] if (s, a) in self.N_sa else 0 for a in range(config.tot_actions)]
+
+        # in order to learn something set the probabilities of the best action to 1 and all other action to 0
+        if temp == 0:
+            action = np.argmax(counts)
+            probs = [0] * config.tot_actions
+            probs[action] = 1
+            return np.array(probs)
+
+        else:
+            counts = [c ** (1. / temp) for c in counts]
+            probs = [c / float(sum(counts)) for c in counts]
+            return np.array(probs)
 
 
     def next_mcts_policy(self, board, mcts_sim_count, net, temp, alpha_dirich):

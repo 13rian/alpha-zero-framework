@@ -73,10 +73,10 @@ def minimax(board, player, fill_state_dict = False):
     move = -1
     score = -2
 
-    for a in board.legal_moves():
+    for a in board.legal_actions():
         board_clone = board.clone()
         current_player = board_clone.player
-        board_clone.play_move(a)      # try out the move
+        board_clone.execute_action(a)      # try the move
         move_score = -minimax(board_clone, board_clone.player, fill_state_dict)      # get the score for the opponent
 
         # fill the state dict
@@ -123,7 +123,7 @@ def play_minimax_games(net, game_count, mcts_sim_count, network_color):
 
                 policy = mcts_list[i_mcts_ctx].policy_from_state(mcts_ctx.board.state_id(), 0)
                 move = np.where(policy == 1)[0][0]
-                mcts_ctx.board.play_move(move)
+                mcts_ctx.board.execute_action(move)
 
         # make an optimal minimax move
         else:
@@ -133,7 +133,7 @@ def play_minimax_games(net, game_count, mcts_sim_count, network_color):
                     continue
 
                 move = mcts_ctx.board.minimax_move()
-                mcts_ctx.board.play_move(move)
+                mcts_ctx.board.execute_action(move)
 
         # swap the player
         player = CONST.WHITE if player == CONST.BLACK else CONST.BLACK

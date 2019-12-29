@@ -72,26 +72,27 @@ class GameBoard:
         pass
 
 
-    def play_move(self, move):
+    def execute_action(self, action):
         """
-        plays the passed move on the board
-        :param move:    integer that defines the column in which the disk is played
+        executes the passed action in the current state of the game
+        :param action:    action to execute, this is an integer between 0 and the total number of all actions
         :return:
         """
         pass
 
 
-    def illegal_moves(self):
+    def legal_actions(self):
         """
-        returns a list of all legal moves
+        returns a list of all legal actions of the current game state
         :return:
         """
         pass
 
 
-    def illegal_moves(self):
+    def illegal_actions(self):
         """
-        returns a list of all illegal moves
+        returns a list of all illegal actions, this list could be calculated from the legal actions but
+        sometimes there are faster implementations available to find all illegal actions
         :return:
         """
         pass

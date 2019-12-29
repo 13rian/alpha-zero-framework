@@ -67,7 +67,7 @@ class TicTacToeBoard(game.GameBoard):
         return state
 
 
-    def play_move(self, move):
+    def execute_action(self, move):
         """
         plays the passed move on the board
         :param move:    integer that defines the position to set the stone
@@ -90,11 +90,11 @@ class TicTacToeBoard(game.GameBoard):
         self.__calc_legal_moves__()
 
 
-    def legal_moves(self):
+    def legal_actions(self):
         return self.legal_moves_list
 
 
-    def illegal_moves(self):
+    def illegal_actions(self):
         """
         returns a list of illegal moves
         :return:
@@ -137,7 +137,7 @@ class TicTacToeBoard(game.GameBoard):
 
 
     ###########################################################################################################
-    #                                               helper methds                                             #
+    #                                               helper methods                                            #
     ###########################################################################################################
     def from_board_matrix(self, board):
         """
@@ -298,7 +298,7 @@ class TicTacToeBoard(game.GameBoard):
         score_list = np.empty(len(self.legal_moves_list))
         for idx, move in enumerate(self.legal_moves_list):
             board_clone = self.clone()
-            board_clone.play_move(move)
+            board_clone.execute_action(move)
             state = board_clone.state_id()
             white_score = minimax.state_dict.get(state)
             score_list[idx] = white_score
