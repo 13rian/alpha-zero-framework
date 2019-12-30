@@ -1,3 +1,5 @@
+import random
+
 import numpy as np
 
 import game
@@ -167,7 +169,7 @@ def move_action_dict(moves):
 
 PDN_MOVES = all_pdn_moves()
 MOVES = all_moves(PDN_MOVES)
-PDN_DICT, MOVE_DICT = create_move_dicts(PDN_MOVES, MOVES)
+PDN_MOVE_DICT, MOVE_PDN_DICT = create_move_dicts(PDN_MOVES, MOVES)
 MOVE_ACTION_DICT = move_action_dict(MOVES)
 ALL_MOVE_COUNT = len(PDN_MOVES)
 
@@ -254,6 +256,18 @@ def move_to_action(move, player):
         move = mirror_move(move)
 
     action = MOVE_ACTION_DICT[move]
+    return action
+
+
+def action_to_pdn(action, player):
+    move = action_to_move(action, player)
+    pdn_move = MOVE_PDN_DICT[move]
+    return pdn_move
+
+
+def pdn_to_action(pdn_move, player):
+    move = PDN_MOVE_DICT[pdn_move]
+    action = move_to_action(move, player)
     return action
 
 
@@ -427,7 +441,8 @@ class CheckersBoard(game.GameBoard):
 
             # only one mandatory capture, execute it
             if capture_count == 1:
-                self.execute_action(self.mandatory_captures[0])
+                capture_action = move_to_action(self.mandatory_captures[0], self.player)
+                self.execute_action(capture_action)
                 return
 
             # more than one capture, the same player needs to decide which capture to execute
@@ -454,7 +469,10 @@ class CheckersBoard(game.GameBoard):
         """
         # check if there are some captures
         if len(self.mandatory_captures) > 0:
-            actions = [MOVE_ACTION_DICT[move] for move in self.mandatory_captures]
+            if self.player == CONST.WHITE:
+                actions = [MOVE_ACTION_DICT[move] for move in self.mandatory_captures]
+            else:
+                actions = [MOVE_ACTION_DICT[mirror_move(move)] for move in self.mandatory_captures]
             return actions
 
         # no captures possible, find normal moves
@@ -475,7 +493,11 @@ class CheckersBoard(game.GameBoard):
         moves += [BAKWARDS_BIT + (0x11 << (i - 4)) for (i, bit) in enumerate(bin(rb)[::-1]) if bit == '1']
         moves += [BAKWARDS_BIT + (0x21 << (i - 5)) for (i, bit) in enumerate(bin(lb)[::-1]) if bit == '1']
 
-        actions = [MOVE_ACTION_DICT[move] for move in moves]
+        if self.player == CONST.WHITE:
+            actions = [MOVE_ACTION_DICT[move] for move in moves]
+        else:
+            actions = [MOVE_ACTION_DICT[mirror_move(move)] for move in moves]   # mirror the moves for black
+
         return actions
 
 
@@ -521,6 +543,16 @@ class CheckersBoard(game.GameBoard):
     ###########################################################################################################
     #                                               helper methods                                            #
     ###########################################################################################################
+    def play_pdn_move(self, pdn_move):
+        """
+        plays the passed pdn_move
+        :param pdn_move:    pdn move to play
+        :return:
+        """
+        action = pdn_to_action(pdn_move, self.player)
+        self.execute_action(action)
+
+
     def check_terminal(self):
         """
         checks if the game is terminal
@@ -609,6 +641,14 @@ class CheckersBoard(game.GameBoard):
             capture_moves += [-BAKWARDS_BIT - (0x401 << (i - 10)) for (i, bit) in enumerate(bin(lbc)[::-1]) if bit == '1']
 
         return capture_moves
+
+
+    def random_action(self):
+        """
+        returns a random legal action
+        :return:
+        """
+        return random.choice(self.legal_actions())
 
 
     def print(self):

@@ -50,13 +50,13 @@ class MCTS:
                 return board
 
             # add dirichlet noise to the root node
-            legal_moves = board.legal_actions()
+            legal_actions = board.legal_actions()
             p_s = self.P[s]
             if alpha_dirich > 0:
                 p_s = np.copy(p_s)
-                alpha_params = alpha_dirich * np.ones(len(legal_moves))
+                alpha_params = alpha_dirich * np.ones(len(legal_actions))
                 dirichlet_noise = np.random.dirichlet(alpha_params)
-                p_s[legal_moves] = 0.75 * p_s[legal_moves] + 0.25 * dirichlet_noise
+                p_s[legal_actions] = 0.75 * p_s[legal_actions] + 0.25 * dirichlet_noise
 
                 # normalize the probabilities again
                 p_s /= np.sum(p_s)
@@ -67,7 +67,7 @@ class MCTS:
             # choose the action with the highest upper confidence bound
             max_ucb = -float("inf")
             action = -1
-            for a in legal_moves:
+            for a in legal_actions:
                 if (s, a) in self.Q:
                     u = self.Q[(s, a)] + config.c_puct * p_s[a] * math.sqrt(self.N_s[s]) / (1 + self.N_sa[(s, a)])
                 else:

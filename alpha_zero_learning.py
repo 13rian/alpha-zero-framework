@@ -348,8 +348,8 @@ def __self_play_worker__(game_class, network_path, game_count):
 
 
             # sample from the policy to determine the move to play
-            move = np.random.choice(len(policy), p=policy)
-            mcts_ctx.board.execute_action(move)
+            action = np.random.choice(len(policy), p=policy)
+            mcts_ctx.board.execute_action(action)
 
         move_count += 1
 

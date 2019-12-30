@@ -14,15 +14,15 @@ class Config:
 
 	# self-play
 	cycles = 1000				# the number of alpha zero cycles
-	episodes = 1  			# the number of games that are self-played in one cycle 2000
+	episodes = 200  			# the number of games that are self-played in one cycle 2000
 	epochs = 2  				# the number of times all training examples are passed through the network 10
 	use_initial_data = False  	# true if the generation 0 network data should be used to have a larger experience buffer at start
 
 	# hyperparameters
-	mcts_sim_count = 4   		# the number of simulations for the monte-carlo tree search 800
+	mcts_sim_count = 200   		# the number of simulations for the monte-carlo tree search 800
 	c_puct = 4 	 				# the higher this constant the more the mcts explores 4
 	temp = 1  					# the temperature, controls the policy value distribution
-	temp_threshold = 42  		# up to this move the temp will be temp, otherwise 0 (deterministic play)
+	temp_threshold = 1000  		# up to this move the temp will be temp, otherwise 0 (deterministic play)
 	alpha_dirich = 1  			# alpha parameter for the dirichlet noise (0.03 - 0.3 az paper, 10/ avg n_moves) 0.3
 
 	# network
