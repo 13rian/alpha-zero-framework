@@ -305,13 +305,7 @@ def __self_play_worker__(game_class, network_path, game_count):
     move_count = 0
     all_terminated = False
     while not all_terminated:
-        # ===========================================  append the correct values to the lists for the training data
-        for i_mcts_ctx, mcts_ctx in enumerate(mcts_list):
-            # skip terminated games
-            if mcts_ctx.board.is_terminal():
-                continue
-
-        # =========================================== execute the mcts simulations for all boards
+        # =========================================== execute one mcts simulations for all boards
         mcts.run_simulations(mcts_list, config.mcts_sim_count, net, config.alpha_dirich)
 
 
