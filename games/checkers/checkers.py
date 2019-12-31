@@ -4,6 +4,7 @@ import numpy as np
 
 import game
 from globals import CONST
+from utils import utils
 from games.checkers.configuration import Config
 
 
@@ -569,6 +570,31 @@ class CheckersBoard(game.GameBoard):
             self.score = 0
             self.terminal = True
             return
+
+        # rule out some basic endgames to shorten the games
+        popcount_kings_w = utils.popcount(self.white_kings)
+        popcount_kings_b = utils.popcount(self.black_kings)
+
+        # no men
+        if (self.white_disks ^ self.white_kings) == 0 and (self.black_disks ^ self.black_kings) == 0:
+            # same king count which is not larger than 3 is a draw
+            if popcount_kings_w <= 3 and popcount_kings_w == popcount_kings_b:
+                self.score = 0
+                self.terminal = True
+                return
+
+            if popcount_kings_w <= 3 and popcount_kings_b <= 3:
+                if popcount_kings_w > popcount_kings_b:
+                    self.score = 1
+                    self.terminal = True
+                    return
+
+                if popcount_kings_b > popcount_kings_w:
+                    self.score = -1
+                    self.terminal = True
+                    return
+
+
 
 
     def captures_from_position(self, position_mask):
