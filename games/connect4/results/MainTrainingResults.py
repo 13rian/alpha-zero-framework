@@ -1,17 +1,13 @@
-import matplotlib.pyplot as plt
 import torch
 import pandas as pd
 import random
 import numpy as np
 import os
 import logging
-import mcts
 import evaluation
 
 from utils import utils
-from game import connect4
-
-from globals import Config
+from games.connect4.configuration import Config
 import data_storage
 
 

@@ -24,7 +24,7 @@ def main_az(game_class):
     """
 
     # The logger
-    utils.init_logger(logging.DEBUG, file_name="log/connect4.log")
+    utils.init_logger(logging.DEBUG, file_name="log/app.log")
     logger = logging.getLogger('main_training')
 
     # set the random seed

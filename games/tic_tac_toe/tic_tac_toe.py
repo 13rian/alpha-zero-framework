@@ -22,7 +22,7 @@ class TicTacToeBoard(game.GameBoard):
         self.player = CONST.WHITE       # disk of the player to move
         self.terminal = False           # is the games finished
         self.score = 0                  # -1 if black wins, 0 if it is a tie and 1 if white wins
-        self.legal_moves_list = []           # holds all legal moves of the current board position
+        self.legal_moves_list = []      # holds all legal moves of the current board position
 
         # calculate all legal moves and disks to flip
         self.__calc_legal_moves__()
@@ -99,12 +99,12 @@ class TicTacToeBoard(game.GameBoard):
         returns a list of illegal moves
         :return:
         """
-        # define the mask with all legal moves
-        move_mask = self.white_player & self.black_player
+        # define the mask with all disks
+        disk_mask = self.white_player ^ self.black_player
 
         illegal_moves = []
         for move in range(9):
-            if (1 << move) & move_mask > 0:
+            if (1 << move) & disk_mask > 0:
                 illegal_moves.append(move)
 
         return illegal_moves

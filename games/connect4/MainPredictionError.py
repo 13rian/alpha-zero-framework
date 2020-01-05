@@ -8,11 +8,10 @@ import torch
 import pandas as pd
 
 from utils import utils
-from games.connect4 import connect4
+from games.connect4 import connect4, evaluation
 from games.connect4.configuration import Config
 import data_storage
 import mcts
-import evaluation
 
 
 # The logger
@@ -48,7 +47,7 @@ policy_error, value_error = evaluation.net_prediction_error(net, test_set)
 logger.debug("prediction-error: {}, value-error: {}, network: {}".format(policy_error, value_error, net_path))
 
 
-# calculate the prediciton error of the networks
+# calculate the prediction error of the networks
 generation = []
 net_prediciton_error = []
 net_value_error = []
@@ -115,7 +114,7 @@ axes.set_ylim([0, 1.5])
 plt.title("Network Value Error")
 plt.xlabel("Generation")
 plt.ylabel("MSE Value")
-fig1.show()
+fig2.show()
 
 
 

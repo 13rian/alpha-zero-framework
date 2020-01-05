@@ -71,4 +71,23 @@ plt.ylabel("MSE Value")
 fig4.show()
 
 
+
+# plot nets vs best network
+net_vs_net_gen = np.load("net_vs_net_gen.npy")
+net_vs_net_pred = np.load("net_vs_net_pred.npy")
+net_vs_net_mcts = np.load("net_vs_net_mcts.npy")
+
+fig5 = plt.figure(5)
+plt.plot(net_vs_net_gen, net_vs_net_pred, label="net only")
+plt.plot(net_vs_net_gen, net_vs_net_mcts, label="mcts")
+axes = plt.gca()
+axes.set_ylim([0, 0.55])
+axes.grid(True, color=(0.9, 0.9, 0.9))
+plt.legend()
+plt.title("Score vs Best Network")
+plt.xlabel("Generation")
+plt.ylabel("Prediction Score")
+fig5.show()
+
+
 plt.show()
