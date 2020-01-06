@@ -26,7 +26,7 @@ random.seed(a=None, version=2)
 np.random.seed(seed=None)
 
 test_set_path = "../../data_sets/test_set.csv"
-network_dir = "../../networks/"                   # directory in which the networks are saved
+network_dir = "../../training_data/connect4/networks/"     # directory in which the networks are saved
 
 print("pytorch version: ", torch.__version__)
 

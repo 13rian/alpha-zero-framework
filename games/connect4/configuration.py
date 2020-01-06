@@ -2,6 +2,9 @@ import torch
 
 
 class Config:
+	# directory in which the networks and the training data are saved
+	save_dir = "training_data/connect4"
+
 	# torch devices for training and evaluation
 	evaluation_device = torch.device('cuda')		# the pytorch device that is used for evaluation
 	training_device = torch.device('cuda') 			# the pytorch device that is used for training

@@ -2,6 +2,9 @@ import torch
 
 
 class Config:
+	# directory in which the networks and the training data are saved
+	save_dir = "training_data/checkers"
+
 	# torch devices for training and evaluation
 	evaluation_device = torch.device('cuda')		# the pytorch device that is used for evaluation
 	training_device = torch.device('cuda') 			# the pytorch device that is used for training
@@ -41,7 +44,7 @@ class Config:
 	weight_decay = 1e-4  		# weight decay to prevent overfitting, should be twice as large as L2 regularization const
 	average_positions = True  	# true if the positions should be averaged before training
 	min_window_size = 4 		# minimal size of the training window (number of cycles for the training data)
-	max_window_size = 120   	# maximal size of the training window (number of cycles for the training data)
+	max_window_size = 100   	# maximal size of the training window (number of cycles for the training data)
 	initial_game_length = 17    # the initial estimated length of a game to fill the initial training data
 
 
@@ -49,7 +52,7 @@ class Config:
 	data_set_params = {
 		'batch_size': batch_size,
 		'shuffle': True,
-		'num_workers': 2,
+		'num_workers': 0,
 		'pin_memory': True,
 		'drop_last': True,
 	}

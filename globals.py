@@ -1,6 +1,8 @@
+from pathlib import Path
+
 # from games.tic_tac_toe import configuration
-# from games.connect4 import configuration
-from games.checkers import configuration
+from games.connect4 import configuration
+# from games.checkers import configuration
 
 
 class CONST:
@@ -10,3 +12,5 @@ class CONST:
 
 # initialize the configuration
 config = configuration.Config()
+
+Path(config.save_dir).mkdir(parents=True, exist_ok=True)

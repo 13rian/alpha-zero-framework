@@ -9,3 +9,4 @@ __pycache__/
 .pydevproject
 /test_set
 /training_set
+/training_data

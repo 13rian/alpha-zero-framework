@@ -8,9 +8,9 @@ import torch
 from globals import config
 
 logger = logging.getLogger('data_storage')
-storage_path = "training_data.pkl"
-network_dir = "networks"
-temp_dir = "temp_net"
+storage_path = config.save_dir + "/training_data.pkl"
+network_dir = config.save_dir + "/networks"
+temp_dir = config.save_dir + "/temp_net"
 
 
 class TrainingData:

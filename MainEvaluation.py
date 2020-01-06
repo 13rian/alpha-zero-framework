@@ -103,8 +103,8 @@ def main_evaluation(game_class):
 
 
 if __name__ == '__main__':
-    main_evaluation(tic_tac_toe.TicTacToeBoard)
-    # main_az(connect4.Connect4Board)
+    # main_evaluation(tic_tac_toe.TicTacToeBoard)
+    main_evaluation(connect4.Connect4Board)
     # main_evaluation(checkers.CheckersBoard)
 
 
