@@ -565,6 +565,10 @@ class CheckersBoard(game.GameBoard):
             self.terminal = True
             return
 
+        # if there are some captures the game is not drawn
+        if len(self.mandatory_captures) > 0:
+            return
+
         # the game is drawn if during the last 40 moves no men was moved or no piece was captured
         if self.no_progress_count >= 80:
             self.score = 0

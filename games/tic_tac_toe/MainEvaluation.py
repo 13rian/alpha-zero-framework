@@ -24,7 +24,7 @@ plt.style.use('seaborn-dark-palette')             # define the styles for the pl
 random.seed(a=None, version=2)
 np.random.seed(seed=None)
 
-network_dir = "../../training_data/connect4/networks/"                   # directory in which the networks are saved
+network_dir = "../../training_data/tic_tac_toe/networks/"                   # directory in which the networks are saved
 
 
 # create the minimax state dict

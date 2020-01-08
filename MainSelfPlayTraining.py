@@ -127,7 +127,7 @@ def main_az(game_class):
 
 if __name__ == '__main__':
     # main_az(tic_tac_toe.TicTacToeBoard)
-    main_az(connect4.Connect4Board)
-    # main_az(checkers.CheckersBoard)
+    # main_az(connect4.Connect4Board)
+    main_az(checkers.CheckersBoard)
 
 

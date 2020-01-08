@@ -1,8 +1,8 @@
 from pathlib import Path
 
 # from games.tic_tac_toe import configuration
-from games.connect4 import configuration
-# from games.checkers import configuration
+# from games.connect4 import configuration
+from games.checkers import configuration
 
 
 class CONST:
