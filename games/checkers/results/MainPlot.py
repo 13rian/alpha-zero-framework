@@ -51,35 +51,14 @@ plt.ylabel("Move Count")
 fig3.show()
 
 
-
-# plot the score against the minimax player
-net_generation = np.load("net_generation.npy")
-white_scores = np.load("white_scores.npy")
-black_scores = np.load("black_scores.npy")
-
-fig4 = plt.figure(4)
-endIdx = 40
-plt.plot(net_generation[0:endIdx], white_scores[0:endIdx], label="white")
-plt.plot(net_generation[0:endIdx], black_scores[0:endIdx], label="black")
-axes = plt.gca()
-# axes.set_ylim([0, 1.5])
-axes.grid(True, color=(0.9, 0.9, 0.9))
-plt.legend()
-plt.title("Network Value Error")
-plt.xlabel("Generation")
-plt.ylabel("Score")
-fig4.show()
-
-
-
 # plot nets vs best network
 net_vs_net_gen = np.load("net_vs_net_gen.npy")
 net_vs_net_pred = np.load("net_vs_net_pred.npy")
-net_vs_net_mcts = np.load("net_vs_net_mcts.npy")
+# net_vs_net_mcts = np.load("net_vs_net_mcts.npy")
 
-fig5 = plt.figure(5)
+fig5 = plt.figure(4)
 plt.plot(net_vs_net_gen, net_vs_net_pred, label="net only")
-plt.plot(net_vs_net_gen, net_vs_net_mcts, label="mcts")
+# plt.plot(net_vs_net_gen, net_vs_net_mcts, label="mcts")
 axes = plt.gca()
 axes.set_ylim([0, 0.55])
 axes.grid(True, color=(0.9, 0.9, 0.9))

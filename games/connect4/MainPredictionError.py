@@ -8,9 +8,14 @@ import torch
 import pandas as pd
 
 from utils import utils
-from games.connect4 import connect4, evaluation
+import globals
+from games.connect4 import configuration
+
+globals.init_config(configuration)
+
 from games.connect4.configuration import Config
 import data_storage
+from games.connect4 import connect4, evaluation
 import mcts
 
 

@@ -16,7 +16,7 @@ class Config:
 	tot_actions = 170  						 # the number of all possible actions (moves)
 
 	# self-play
-	cycles = 1000				# the number of alpha zero cycles
+	cycles = 190				# the number of alpha zero cycles
 	episodes = 200  			# the number of games that are self-played in one cycle 2000
 	epochs = 2  				# the number of times all training examples are passed through the network 10
 	use_initial_data = False  	# true if the generation 0 network data should be used to have a larger experience buffer at start

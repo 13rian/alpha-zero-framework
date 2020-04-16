@@ -76,9 +76,9 @@ def main_evaluation(game_class):
 
 
     # save the results
-    np.save("net_vs_net_pred.npy", np.array(prediction_score))
-    np.save("net_vs_net_mcts.npy", np.array(mcts_score))
-    np.save("net_vs_net_gen.npy", np.array(generation))
+    np.save("games/checkers/results/net_vs_net_pred.npy", np.array(prediction_score))
+    np.save("games/checkers/results/net_vs_net_mcts.npy", np.array(mcts_score))
+    np.save("games/checkers/results/net_vs_net_gen.npy", np.array(generation))
 
 
     # set the style of the plot

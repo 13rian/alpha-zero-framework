@@ -4,11 +4,17 @@ import random
 import numpy as np
 import os
 import logging
-import evaluation
 
 from utils import utils
+
+import globals
+from games.connect4 import configuration
+
+globals.init_config(configuration)
+
 from games.connect4.configuration import Config
 import data_storage
+import games.connect4.evaluation as evaluation
 
 
 # The logger
@@ -25,8 +31,8 @@ np.random.seed(seed=None)
 c_puct = 4
 temp = 0
 mcts_sim_count = 200
-test_set_path = "../test_set/training_set.csv"
-network_dir = "../training_data/connect4/networks/"    # directory in which the networks are saved
+test_set_path = "../data_sets/training_set.csv"
+network_dir = "../../../training_data/connect4/networks/"    # directory in which the networks are saved
 
 print("pytorch version: ", torch.__version__)
 

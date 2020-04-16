@@ -1,3 +1,4 @@
+from pathlib import Path
 import random
 import time
 import logging
@@ -27,6 +28,9 @@ def main_az(game_class):
     # set the random seed
     random.seed(a=None, version=2)
     np.random.seed(seed=None)
+
+    # create the training data directory
+    Path(config.save_dir).mkdir(parents=True, exist_ok=True)
 
     # create the storage object
     training_data = data_storage.load_data()
@@ -81,9 +85,9 @@ def main_az(game_class):
 
 
     # save the results
-    np.save("value_loss.npy", np.array(training_data.value_loss))
-    np.save("policy_loss.npy", np.array(training_data.policy_loss))
-    np.save("avg_moves.npy", np.array(training_data.avg_moves_played))
+    np.save("games/checkers/results/value_loss.npy", np.array(training_data.value_loss))
+    np.save("games/checkers/results/policy_loss.npy", np.array(training_data.policy_loss))
+    np.save("games/checkers/results/avg_moves.npy", np.array(training_data.avg_moves_played))
 
 
     # set the style of the plot

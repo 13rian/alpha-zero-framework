@@ -6,9 +6,14 @@ import numpy as np
 import matplotlib.pyplot as plt
 import torch
 
+import globals
+from games.tic_tac_toe import configuration
+
+globals.init_config(configuration)
+
 from utils import utils
-import data_storage
 from globals import CONST
+import data_storage
 from games.tic_tac_toe import minimax
 
 
