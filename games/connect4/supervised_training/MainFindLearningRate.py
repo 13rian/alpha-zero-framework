@@ -5,13 +5,16 @@ import random
 import numpy as np
 import logging
 
+from games.connect4 import configuration
+import globals
+globals.init_config(configuration)
 
 from utils import utils
-from globals import Config
-from supervised_training import supervised
+from games.connect4.supervised_training import supervised
 import networks
 import data_storage
-import evaluation
+from games.connect4 import evaluation
+from globals import config
 
 
 def main_lr():
@@ -37,10 +40,10 @@ def main_lr():
 
 
     # parameters
-    Config.batch_size = 256
-    Config.weight_decay = 1e-4
-    Config.n_blocks = 10
-    Config.n_filters = 128
+    config.batch_size = 256
+    config.weight_decay = 1e-4
+    config.n_blocks = 10
+    config.n_filters = 128
     epochs = 8
     csv_training_set_path = "../data_sets/training_set.csv"
     csv_test_set_path = "../data_sets/training_set.csv"
@@ -62,7 +65,7 @@ def main_lr():
 
     # define the parameters for the training
     params = {
-        'batch_size': Config.batch_size,
+        'batch_size': config.batch_size,
         'shuffle': True,
         'num_workers': 2,
         'pin_memory': True,
@@ -79,10 +82,10 @@ def main_lr():
     prediction_errors = []
     value_errors = []
     for power in np.arange(-6, 0.1, 0.25):
-        Config.learning_rate = 10**power
+        config.learning_rate = 10**power
         prediction_error, value_error = train_net(epochs, training_generator, csv_test_set)
 
-        learning_rates.append(Config.learning_rate)
+        learning_rates.append(config.learning_rate)
         prediction_errors.append(prediction_error)
         value_errors.append(value_error)
 
@@ -131,8 +134,8 @@ def train_net(epoch_count, training_generator, csv_test_set):
     logger = logging.getLogger('Sup Learning')
 
     # create a new network to train
-    network = networks.ResNet(Config.learning_rate, Config.n_blocks, Config.n_filters, Config.weight_decay)
-    network = data_storage.net_to_device(network, Config.training_device)
+    network = networks.ResNet(config.learning_rate, config.n_blocks, config.n_filters, config.weight_decay)
+    network = data_storage.net_to_device(network, config.training_device)
 
 
 
@@ -142,9 +145,9 @@ def train_net(epoch_count, training_generator, csv_test_set):
         # training
         for state_batch, value_batch, policy_batch in training_generator:
             # send the data to the gpu
-            state_batch = state_batch.to(Config.training_device)
-            value_batch = value_batch.to(Config.training_device)
-            policy_batch = policy_batch.to(Config.training_device)
+            state_batch = state_batch.to(config.training_device)
+            value_batch = value_batch.to(config.training_device)
+            policy_batch = policy_batch.to(config.training_device)
 
             # execute one training step
             _, _ = network.train_step(state_batch, policy_batch, value_batch)
@@ -152,7 +155,7 @@ def train_net(epoch_count, training_generator, csv_test_set):
 
     # evaluation
     pred_error, val_error = evaluation.net_prediction_error(network, csv_test_set)
-    logger.debug("learning rate {}, prediction error: {}, value-error: {}".format(Config.learning_rate, pred_error, val_error))
+    logger.debug("learning rate {}, prediction error: {}, value-error: {}".format(config.learning_rate, pred_error, val_error))
     return pred_error, val_error
 
 
