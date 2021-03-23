@@ -22,7 +22,7 @@ class BoardWrapper:
 
 
 #@utils.profile
-def main_evaluation(game_class):
+def main_evaluation(game_class, result_folder):
     # configuration values
     game_count = 200        # the number of test games to play
     mcts_sim_count = 200     # the number of mcts simulations to perform
@@ -76,9 +76,9 @@ def main_evaluation(game_class):
 
 
     # save the results
-    np.save("games/checkers/results/net_vs_net_pred.npy", np.array(prediction_score))
-    np.save("games/checkers/results/net_vs_net_mcts.npy", np.array(mcts_score))
-    np.save("games/checkers/results/net_vs_net_gen.npy", np.array(generation))
+    np.save(result_folder +"/net_vs_net_pred.npy", np.array(prediction_score))
+    np.save(result_folder + "/net_vs_net_mcts.npy", np.array(mcts_score))
+    np.save(result_folder + "/net_vs_net_gen.npy", np.array(generation))
 
 
     # set the style of the plot

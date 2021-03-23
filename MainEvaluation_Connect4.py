@@ -8,4 +8,4 @@ from games.connect4 import connect4
 
 
 if __name__ == '__main__':
-    evaluation.main_evaluation(connect4.Connect4Board)
+    evaluation.main_evaluation(connect4.Connect4Board, "games/connect4/results")

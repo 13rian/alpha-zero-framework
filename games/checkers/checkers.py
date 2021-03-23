@@ -16,6 +16,19 @@ WHITE_BACKRANK_BITS = 0xf                   # bits that define white's backrank
 BLACK_BACKRANK_BITS = 0x780000000           # bits that define black's backrank
 
 
+"""
+board notation
+  32  31  30  29
+28  27  26  25
+  24  23  22  21
+20  19  18  17
+  16  15  14  13
+12  11  10  09
+  08  07  06  05
+04  03  02  01  
+"""
+
+
 #################################################################################################################
 #                                             all checkers moves                                                #
 #################################################################################################################
@@ -686,6 +699,10 @@ class CheckersBoard(game.GameBoard):
         prints out the board in human readable form
         :return:
         """
+        print(self.to_string())
+
+
+    def to_string(self):
         white_men = self.white_disks ^ self.white_kings
         black_men = self.black_disks ^ self.black_kings
 
@@ -736,7 +753,7 @@ class CheckersBoard(game.GameBoard):
 
             str_board += "\n"
 
-        print(str_board)
+        return str_board
 
 
 def int_to_board(number):

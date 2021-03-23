@@ -8,4 +8,4 @@ from games.checkers import checkers
 
 
 if __name__ == '__main__':
-    evaluation.main_evaluation(checkers.CheckersBoard)
+    evaluation.main_evaluation(checkers.CheckersBoard, "games/checkers/results")
